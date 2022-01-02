@@ -1,6 +1,6 @@
-# Hiperfolio - Frontend
+# Hyperfolio - Frontend
 
-React application - Main frontend for the Hiperfolio Web App
+React application - Main frontend for the Hyperfolio Web App
 
 ![screenshot](screenshot.png)
 
