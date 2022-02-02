@@ -28,13 +28,12 @@ const useStyles = makeStyles(({
 }));
 
 
-const FormMeta = ({ className, ...rest }) => {
+const FormCategories = ({ className, formData, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     password: '',
     confirm: ''
   });
-
 
   const [open1, setOpen1] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -92,6 +91,7 @@ const FormMeta = ({ className, ...rest }) => {
               color="default"
               variant="contained"
               onClick={handleClickOpen1}
+              color={formData.jobs.length!=0 ? "primary":"default"}
             >
               Add Jobs
             </Button>
@@ -134,18 +134,12 @@ const FormMeta = ({ className, ...rest }) => {
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
             >
-        <DialogTitle id="form-dialog-title">Jobs</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Add jobs related with your portfolio creation. This will better organized your CV and help companies to find you.
-          </DialogContentText>
-          <AddJobs />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Done
-          </Button>
-        </DialogActions>
+
+          <AddJobs
+            handleClose={handleClose}
+            formData={formData}
+          />
+
       </Dialog>
 
       <Dialog 
@@ -219,8 +213,8 @@ const FormMeta = ({ className, ...rest }) => {
   );
 };
 
-FormMeta.propTypes = {
+FormCategories.propTypes = {
   className: PropTypes.string
 };
 
-export default FormMeta;
+export default FormCategories;

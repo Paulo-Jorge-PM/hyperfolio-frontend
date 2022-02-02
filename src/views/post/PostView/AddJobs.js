@@ -5,6 +5,26 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+  Grid,
+  Box,
+  Button,
+  DialogActions,
+  DialogContentText,
+  DialogContent,
+  DialogTitle
+
+} from '@material-ui/core';
+
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import DeleteForever from '@material-ui/icons/DeleteForever';
+
+
 
 const SERVER = 'http://localhost:5820/esco/query';
 
@@ -23,17 +43,21 @@ function queryOccupation(wordInput) {
   return q;
 }
 
-const Jobs = ({ className, ...rest }) => {
+const Jobs = ({ className, formData, handleClose, ...rest }) => {
 
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const loading = open && options.length === 0;
   const [inputWord, setInputWord] = React.useState('');
 
+  const [selectedJob, setselectedJob] = React.useState('');
+  const [jobs, setJobs] = React.useState(formData.jobs);
+
+
 function buildOptions(d) {
   var data = d.results.bindings;
   setOptions( Object.keys(data).map((key) => data[key]) )
-    //ata.results.map(item => item))
+    //data.results.map(item => item))
 }
 
 function changeOptionBaseOnValue(val) {
@@ -67,11 +91,41 @@ function changeOptionBaseOnValue(val) {
       .then(response => response.json())
       .then(data => buildOptions(data) )
       //.catch(error => this.setState({ error, isLoading: false }));
+}
 
-      
+function addEntry() {
+setJobs(jobs => jobs.concat(selectedJob));
+//alert(JSON.stringify(test));
+formData.jobs = formData.jobs.concat(selectedJob);
+}
+
+function listRemove(job) {
+  setJobs(jobs.filter(item => item !== job));
+  formData.jobs = formData.jobs.filter(item => item !== job);
 }
 
   return (
+
+<Box>
+        <DialogTitle id="form-dialog-title">
+          Jobs
+
+          <Button onClick={() => handleClose()} color="primary" size="small" variant="outlined" style={{position: 'absolute', right: '25px'}}>
+            Done
+          </Button>
+        </DialogTitle>
+
+        {/*<DialogActions>
+          <Button onClick={false} color="primary">
+            Add
+          </Button>
+        </DialogActions>*/}
+
+        <DialogContent>
+          <DialogContentText>
+            Add jobs related with your portfolio creation. This will better organized your CV and help companies to find you.
+          </DialogContentText>
+
     <Autocomplete
       id="asynchronous"
       style={{ width:"100%" }}
@@ -89,6 +143,7 @@ function changeOptionBaseOnValue(val) {
       loading={loading}
 
       onInputChange={(event: object, value: string, reason: string) => {
+        setselectedJob(value);
         if (reason === 'input') {
           setInputWord(value);
           changeOptionBaseOnValue(value);
@@ -97,8 +152,10 @@ function changeOptionBaseOnValue(val) {
 
 
       renderInput={(params) => (
+        <Grid>
         <TextField
           {...params}
+          style={{ paddingRight: '100px' }}
           label="Type to search..."
           variant="outlined"
           autoFocus={true}
@@ -112,8 +169,30 @@ function changeOptionBaseOnValue(val) {
             ),
           }}
         />
+
+          <Button onClick={addEntry} color="primary" size="large" variant="contained" style={{ marginTop:'7px', position: 'absolute', right: '25px' }}>
+            Add
+          </Button>
+        </Grid>
       )}
     />
+
+        </DialogContent>
+
+<Grid style={{ paddingRight: '20px', paddingLeft: '15px' }}>
+      <List component="nav" aria-label="secondary mailbox folders">
+      {jobs.map((job) => 
+        <ListItem button style={{ borderBottom:'1px dashed #F5F5F5', marginBottom:'5px' }} onClick={() => listRemove(job)}>
+          <ListItemText primary={job} />
+         <ListItemIcon style={{ paddingLeft:'20px' }}>
+            <DeleteForever />
+          </ListItemIcon>
+        </ListItem>
+      )}
+      </List>
+</Grid>
+
+    </Box>
   );
 };
 

@@ -23,8 +23,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, updateForm, ...rest }) => {
   const classes = useStyles();
+
+const generalUpdate = (event) => {
+  const name = event.target.name;
+  const value = event.target.value;
+  updateForm(name, value);
+}
 
   return (
 
@@ -50,6 +56,9 @@ const Toolbar = ({ className, ...rest }) => {
                 }}
                 placeholder="A short awesome title..."
                 variant="outlined"
+
+                name="title"
+                onChange={generalUpdate}
               />
             </Box>
 

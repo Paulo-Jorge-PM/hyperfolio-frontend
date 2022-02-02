@@ -21,6 +21,7 @@ import {
   Users as UsersIcon,
   Settings as SettingsIcon,
   User as UserIcon,
+  Search as SearchIcon,
 
   /*Lock as LockIcon,
   ShoppingBag as ShoppingBagIcon,
@@ -57,14 +58,14 @@ const items = [
     title: 'Curriculum'
   },
   {
+    href: 'search',
+    icon: SearchIcon,
+    title: 'Search'
+  },
+  {
     href: 'users',
     icon: UserIcon,
     title: 'Users & Companies'
-  },
-  {
-    href: 'jobs',
-    icon: UsersIcon,
-    title: 'Find Jobs'
   },
   {
     href: 'communities',
@@ -74,7 +75,7 @@ const items = [
   {
     href: 'notifications',
     icon: Bell,
-    title: 'Notifications'
+    title: 'Messages'
   },
   {
     href: 'settings',

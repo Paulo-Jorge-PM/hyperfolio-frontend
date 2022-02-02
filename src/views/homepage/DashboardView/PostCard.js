@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -39,9 +40,76 @@ import {
   Paperclip as Paperclip,
 } from 'react-feather';
 
+
+
+import { Link as RouterLink } from 'react-router-dom';
+
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import {
+MoveToInbox,
+Drafts,
+Send,
+Settings,
+ExitToApp,
+DataUsage,
+AccountBox,
+} from '@material-ui/icons';
+
+
+const user = {
+  avatar: './static/images/avatars/avatar_3.png',
+  name: 'Paulo Martins',
+  job: 'Engenheiro Informático'
+};
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props) => (
+  <Menu
+    disableScrollLock={true}
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    //'&:focus': {
+    //  backgroundColor: theme.palette.primary.main,
+    //  '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+    //    color: theme.palette.common.white,
+    //  },
+    //},
+  }
+}))(MenuItem);
+
+
+
+
+
+
+
+
 const componentsMap = { Artifact, Activity, Text };
 
-function TypePOst(props) {
+function TypePost(props) {
   const type = props.type;
   if (type=="Artifact") {
   return (
@@ -66,6 +134,25 @@ function TypePOst(props) {
   return <GuestGreeting />;*/
 }
 
+function TypeThis(props) {
+  const type = props.type;
+  if (type=="Artifact") {
+  return (
+    <span>DID THIS!</span>
+    )
+  }
+  else if (type=="Activity") {
+  return (
+    <span>LIVED THIS!</span>
+    )
+  }
+  else if (type=="Text") {
+  return (
+    <span>SAID THIS!</span>
+    )
+  }
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -85,7 +172,24 @@ const useStyles = makeStyles((theme) => ({
   userPhoto: {
     borderRadius:'50%',
     marginRight:'10px',
+  },
+  postMenu: {
+    '&:hover': {
+         color: 'red',
+      }
+  },
+  badgeSide: {
+    '&:hover': {
+         background: '#bdbdbd',
+      }
+  },
+  sideMetadata: {
+    fontSize: '14px'
+  },
+  hidde: {
+    display:"none"
   }
+
 }));
 
 const StyledBadge = withStyles((theme) => ({
@@ -97,8 +201,69 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
+
+
+function editPost(id) {
+  //alert(event.currentTarget.getAttribute('name'));
+  alert(id);
+}
+
+
+
+
+
+
+
+
 const PostCard = ({ className, post, ...rest }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [hidden, setHidden] = useState(true);
+
   const classes = useStyles();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function badgeEnter(event) {
+    //alert(event.currentTarget);
+    setHidden(false);
+  }
+
+  function badgeExit(event) {
+    //alert(event.currentTarget);
+    setHidden(true);
+  }
+
+
+
+
+  let jobs;
+  {if(post.jobs.length!=0) {
+    jobs = <Typography color="textSecondary" className={classes.sideMetadata}>
+      <p><strong>Job:</strong></p>
+      {post.jobs.map((item) =>
+        <p>{item}</p>
+        )}
+    </Typography>
+    }
+  }
+
+  let skills;
+  {if(post.skills.length!=0) {
+    skills = <Typography color="textSecondary" className={classes.sideMetadata}>
+      <p><strong>Skills:</strong></p>
+      {post.skills.map((item) =>
+        <p>{item}</p>
+        )}
+    </Typography>
+    }
+  }
 
   return (
     <Card style={{position:"relative", overflow:"visible"}}
@@ -108,14 +273,45 @@ const PostCard = ({ className, post, ...rest }) => {
 
       <CardContent>
 
-      <Card style={{position:"absolute", top:"0px", left:"-46px", padding:"5px 10px"}}>
+
+      <Box
+      style={{position:"absolute", top:"0px", left:"-203px", width:"200px", textAlign:"right"}}
+      >
+
+      <Card
+        onMouseEnter={badgeEnter}
+        onMouseLeave={badgeExit}
+        className={classes.badgeSide}
+        style={{width:"44px", height:"38px", padding:"5px 10px", position:"absolute", right:"0px"}}
+        >
+
       <SvgIcon 
-              fontSize="medium"
+              fontSize="default"
               color="action"
             >
-              <TypePOst type={post.typePost} />
+              <TypePost type={post.typePost} />
             </SvgIcon>
         </Card>
+
+
+          <Box
+            className={ hidden ? classes.hidde : null }
+            id="sideMetadata"
+            style={{marginTop:"45px", paddingRight:"5px", width:"100%"}}
+           >
+              <Typography color="textSecondary">
+              <strong><TypeThis type={post.typePost} /></strong>
+              </Typography>
+
+              <br />
+              {jobs}
+
+              <br />
+              {skills}
+
+          </Box>
+
+      </Box>  
 
         <Box
           display="flex"
@@ -136,9 +332,8 @@ const PostCard = ({ className, post, ...rest }) => {
               justifyContent="left"
               flexDirection="row"
               alignItems="top"
-              lineHeight={0}
             >
-              <Typography display="block" className={classes.userName} color="textSecondary" m={20} p={30} lineHeight={0}>
+              <Typography display="block" className={classes.userName} color="textSecondary" m={20} p={30}>
               Paulo Martins
               </Typography>
 
@@ -146,10 +341,9 @@ const PostCard = ({ className, post, ...rest }) => {
               color="textSecondary" 
               m={0} 
               p={0} 
-              lineHeight={0}
               variant="body2"
               >
-              Engenheiro Informático
+              Investigador / Eng. Informático
               </Typography>
             </Box>
 
@@ -161,12 +355,65 @@ const PostCard = ({ className, post, ...rest }) => {
               alignItems="center"
               style={{position: 'absolute', top:0, right: 0}}
             >
-            <Typography display="block" color="textSecondary" m={0} p={0} lineHeight={0}>
-              <Link
+            <Typography display="block" color="textSecondary" m={0} p={0}>
+              <a
               href="#"
+              onClick={handleClick}
+              className={classes.postMenu}
               >
               <MoreHorizontal />
-              </Link>
+              </a>
+
+
+<StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        onClick={handleClose}
+      >
+
+        <StyledMenuItem onClick={() => {editPost(post.id)} }>
+          <ListItemIcon>
+            <DataUsage fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Edit" />
+        </StyledMenuItem>
+
+        <StyledMenuItem onClick={() => {editPost(post.id)} }>
+          <ListItemIcon>
+            <Send fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Share" />
+        </StyledMenuItem>
+
+        <StyledMenuItem onClick={() => {editPost(post.id)} }>
+          <ListItemIcon>
+            <Drafts fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Comments" />
+        </StyledMenuItem>
+
+        <StyledMenuItem component={RouterLink} to="/settings">
+          <ListItemIcon>
+            <Settings fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Privacy" />
+        </StyledMenuItem>
+
+        <StyledMenuItem onClick={() => {editPost(post.id)} }>
+          <ListItemIcon>
+            <ExitToApp fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Delete" />
+        </StyledMenuItem>
+      </StyledMenu>
+
+
+
+
+
             </Typography>
             </Box>
 
@@ -182,13 +429,14 @@ const PostCard = ({ className, post, ...rest }) => {
         </Typography>
 </CardContent>
 
-
+    { post.thumbnail != "" &&
      <CardMedia
         className={classes.media}
         component="img"
         src={`/static/images/artifacts/${post.thumbnail}`}
         title="Artifact"
       />
+    }
 
 <CardContent>
         <Typography

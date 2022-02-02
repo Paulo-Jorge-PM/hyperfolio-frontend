@@ -5,6 +5,11 @@ import {
   Box,
   Button,
   ButtonBase,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  DialogContent,
+  DialogTitle,
   Typography,
   Card,
   Grid,
@@ -14,6 +19,8 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
+
+import AddAssets from './AddAssets';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -84,8 +91,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FormAssets = ({ className, ...rest }) => {
+const FormAssets = ({ className, formData, ...rest }) => {
   const classes = useStyles();
+
+  const [openAssets, setOpenAssets] = React.useState(false);
+  const [openIllustration, setIllustration] = React.useState(false);
+
+  const handleClickOpenAssets = (number) => {
+    setOpenAssets(true);
+  };
+
+  const handleClickOpenIllustration = (number) => {
+    setIllustration(true);
+  };
+
+  const handleClose = (number) => {
+    setOpenAssets(false);
+    setIllustration(false);
+  };
+
 
   return (
       <Card>
@@ -105,6 +129,8 @@ const FormAssets = ({ className, ...rest }) => {
         >
           <Grid item xs={6}>
             <ButtonBase
+              onClick={handleClickOpenAssets}
+
               focusRipple
               key="{image.title}"
               className={classes.image}
@@ -127,7 +153,7 @@ const FormAssets = ({ className, ...rest }) => {
                   color="inherit"
                   className={classes.imageTitle}
                 >
-                  ADD ASSETS
+                  ADD ASSETS{formData.assets.length!=0 ? " (xx)":""}
                   <span className={classes.imageMarked} />
                 </Typography>
               </span>
@@ -164,6 +190,24 @@ const FormAssets = ({ className, ...rest }) => {
             </ButtonBase>
           </Grid>
         </Grid>
+
+
+
+      <Dialog 
+            open={openAssets} 
+            fullWidth={true}
+            maxWidth="md"
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+            >
+
+          <AddAssets
+            handleClose={handleClose}
+            formData={formData}
+          />
+
+      </Dialog>
+
 
 
         </CardContent>

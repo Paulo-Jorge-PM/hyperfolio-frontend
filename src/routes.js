@@ -11,6 +11,8 @@ import CommunitiesView from 'src/views/communities/CommunitiesView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 import PostView from 'src/views/post/PostView';
+import CvView from 'src/views/cv/CvView';
+import SearchView from 'src/views/search/SearchView';
 
 const routes = [
   {
@@ -20,6 +22,8 @@ const routes = [
       { path: 'wall', element: <DashboardView /> },
       { path: 'account', element: <AccountView /> },
       { path: 'users', element: <UsersView /> },
+      { path: 'cv', element: <CvView /> },
+      { path: 'search', element: <SearchView /> },
       { path: 'communities', element: <CommunitiesView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: 'post', element: <PostView /> },
