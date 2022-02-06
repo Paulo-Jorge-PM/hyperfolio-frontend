@@ -21,6 +21,7 @@ import {
 import AddJobs from './AddJobs';
 import AddSkills from './AddSkills';
 import AddCategories from './AddCategories';
+import AddPersons from './AddPersons';
 
 
 const useStyles = makeStyles(({
@@ -101,6 +102,7 @@ const FormCategories = ({ className, formData, ...rest }) => {
               color="default"
               variant="contained"
               onClick={handleClickOpen2}
+              color={formData.skills.length!=0 ? "primary":"default"}
             >
               Add Skills
             </Button>
@@ -110,8 +112,9 @@ const FormCategories = ({ className, formData, ...rest }) => {
               color="default"
               variant="contained"
               onClick={handleClickOpen3}
+              color={formData.categories.length!=0 ? "primary":"default"}
             >
-              Add Tags
+              Add Type
             </Button>
           </Grid>
           <Grid item xs={3} align="center">
@@ -119,8 +122,9 @@ const FormCategories = ({ className, formData, ...rest }) => {
               color="default"
               variant="contained"
               onClick={handleClickOpen4}
+              color={formData.persons.length!=0 ? "primary":"default"}
             >
-              Add Friends
+              Add Persons
             </Button>
           </Grid>
         </Grid>
@@ -149,20 +153,13 @@ const FormCategories = ({ className, formData, ...rest }) => {
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
             >
-        <DialogTitle id="form-dialog-title">Skills</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Add skills related with your portfolio creation. This will better organized your CV and help companies to find you.
-          </DialogContentText>
-          <AddSkills />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Done
-          </Button>
-        </DialogActions>
-      </Dialog>
 
+          <AddSkills
+            handleClose={handleClose}
+            formData={formData}
+          />
+
+      </Dialog>
 
       <Dialog 
             open={open3} 
@@ -171,18 +168,12 @@ const FormCategories = ({ className, formData, ...rest }) => {
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
             >
-        <DialogTitle id="form-dialog-title">Tags</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Add tags that would help you identify your portfolio.
-          </DialogContentText>
-          <AddJobs />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Done
-          </Button>
-        </DialogActions>
+
+          <AddCategories
+            handleClose={handleClose}
+            formData={formData}
+          />
+
       </Dialog>
 
 
@@ -193,18 +184,12 @@ const FormCategories = ({ className, formData, ...rest }) => {
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
             >
-        <DialogTitle id="form-dialog-title">Friends</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Add friends that collaborated with this portfolio creation.
-          </DialogContentText>
-          <AddCategories />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Done
-          </Button>
-        </DialogActions>
+
+          <AddPersons
+            handleClose={handleClose}
+            formData={formData}
+          />
+
       </Dialog>
 
         </CardContent>

@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Navigate } from "react-router-dom";
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -21,7 +23,8 @@ import { Award as Artifact } from 'react-feather';
 import { Send as Activity } from 'react-feather';
 import { MessageCircle as Text } from 'react-feather';
 
-import Toolbar from './Toolbar';
+//import Toolbar from './Toolbar';
+import Toolbar from '../../post/PostView/Toolbar';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,8 +49,28 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+let formData = {
+  title: "",
+  typePost: "",
+  isHomepage: true
+}
+
 const Post = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [redirect, setRedirect] = useState(null);
+
+  // Callback function to communicate bettween parent and child component
+  const updateForm = useCallback((field, value) => {
+    //formData[field] = value;
+    if(field=="redirect") {
+      setRedirect(value);
+    }
+  }, []);
+
+  if (redirect) {
+    const toLink = "/post?typePost="+formData.typePost;
+    return <Navigate to={toLink} />
+  }
 
   return (
     <Container maxWidth={false}>
@@ -56,79 +79,12 @@ const Post = ({ className, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardContent>
-        <Box
-          display="flex"
-          justifyContent="left"
-          alignItems="center"
-          mb={3}
-          style={{position: 'relative'}}
-        >
-          <Avatar
-            className={classes.userPhoto}
-            alt="User Photo"
-            src=""
-            variant="square"
-          />
 
-            <Toolbar />
+      <Toolbar 
+        formData={formData}
+        updateForm={updateForm}
+      />
 
-        </Box>
-
-<Divider />
-
-          <Grid style={{paddingTop: "10px"}}
-            direction="row"
-            justify="center"
-            alignItems="center"
-            spacing={8}
-            container
-          >
-
-          <Grid item style={{paddingBottom: "20px"}}>
-          <Button className={classes.importButton} 
-            //color="primary"
-            variant="contained"
-          >
-            Did this! &nbsp; <SvgIcon
-              fontSize="small"
-              //color="action"
-            >
-              <Artifact />
-            </SvgIcon>
-          </Button>
-          </Grid>
-
-          <Grid item style={{paddingBottom: "20px"}}>
-          <Button className={classes.exportButton} 
-            //color="primary"
-            variant="contained"
-          >
-            Lived this! &nbsp; <SvgIcon
-              fontSize="small"
-              //color="action"
-            >
-              <Activity />
-            </SvgIcon>
-          </Button>
-          </Grid>
-
-          <Grid item style={{paddingBottom: "20px"}}>
-          <Button 
-            //color="primary"
-            variant="contained"
-          >
-            Said this! &nbsp; <SvgIcon
-              fontSize="small"
-              //color="action"
-            >
-              <Text />
-            </SvgIcon>
-          </Button>
-          </Grid>
-
-        </Grid>
-      </CardContent>
     </Card>
   </Container>
   );
@@ -136,7 +92,7 @@ const Post = ({ className, ...rest }) => {
 
 Post.propTypes = {
   className: PropTypes.string,
-  product: PropTypes.object.isRequired
+  //product: PropTypes.object.isRequired
 };
 
 export default Post;

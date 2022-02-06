@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function querySkill(wordInput) {
+function queryPerson(wordInput) {
   let word = wordInput.toLowerCase();
   var q = `
   select ?skill where { 
@@ -49,7 +49,7 @@ function querySkill(wordInput) {
   return q;
 }
 
-const Skills = ({ className, formData, handleClose, ...rest }) => {
+const Persons = ({ className, formData, handleClose, ...rest }) => {
 
   const classes = useStyles();
 
@@ -58,8 +58,8 @@ const Skills = ({ className, formData, handleClose, ...rest }) => {
   const loading = open && options.length === 0;
   const [inputWord, setInputWord] = React.useState('');
 
-  const [selectedSkill, setselectedSkill] = React.useState('');
-  const [skills, setSkills] = React.useState(formData.skills);
+  const [selectedPerson, setselectedPerson] = React.useState('');
+  const [persons, setPersons] = React.useState(formData.persons);
 
 
 function buildOptions(d) {
@@ -69,7 +69,7 @@ function buildOptions(d) {
 }
 
 function changeOptionBaseOnValue(val) {
-      let query = querySkill(val);
+      let query = queryPerson(val);
       fetch(SERVER+'?query='+encodeURIComponent(query), {
           method: 'GET',
           //headers: new Headers({
@@ -84,20 +84,20 @@ function changeOptionBaseOnValue(val) {
 }
 
 function addEntry() {
-setSkills(skills => skills.concat(selectedSkill));
-formData.skills = formData.skills.concat(selectedSkill);
+setPersons(persons => persons.concat(selectedPerson));
+formData.persons = formData.persons.concat(selectedPerson);
 }
 
 function listRemove(job) {
-  setSkills(skills.filter(item => item !== job));
-  formData.skills = formData.skills.filter(item => item !== job);
+  setPersons(persons.filter(item => item !== job));
+  formData.persons = formData.persons.filter(item => item !== job);
 }
 
   return (
 
 <Box>
         <DialogTitle id="form-dialog-title">
-          Skills
+          Persons
 
           <Button onClick={() => handleClose()} color="primary" size="small" variant="outlined" style={{position: 'absolute', right: '25px'}}>
             Done
@@ -106,7 +106,7 @@ function listRemove(job) {
 
         <DialogContent>
           <DialogContentText>
-            Add skills related with your portfolio creation. This will connect you to jobs and feed your CV.
+            Add persons that collaborated with this portfolio creation.
           </DialogContentText>
 
     <Autocomplete
@@ -126,7 +126,7 @@ function listRemove(job) {
       loading={loading}
 
       onInputChange={(event: object, value: string, reason: string) => {
-        setselectedSkill(value);
+        setselectedPerson(value);
         if (reason === 'input') {
           setInputWord(value);
           changeOptionBaseOnValue(value);
@@ -164,7 +164,7 @@ function listRemove(job) {
 
 <Grid style={{ paddingRight: '20px', paddingLeft: '15px' }}>
       <List component="nav" aria-label="secondary mailbox folders">
-      {skills.map((skill) => 
+      {persons.map((skill) => 
         <ListItem button className={classes.delItem} style={{ borderBottom:'1px dashed #F5F5F5', marginBottom:'5px' }} onClick={() => listRemove(skill)}>
           <ListItemText primary={skill} />
          <ListItemIcon style={{ paddingLeft:'20px' }}>
@@ -179,8 +179,8 @@ function listRemove(job) {
   );
 };
 
-Skills.propTypes = {
+Persons.propTypes = {
   className: PropTypes.string,
 };
 
-export default Skills;
+export default Persons;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
  import {
   Box,
   Container,
@@ -9,16 +10,7 @@ import { Pagination } from '@material-ui/lab';
 import Page from 'src/components/Page';
 import PostCard from './PostCard';
 
-
-//const API = 'https://hn.algolia.com/api/v1/search?query=redux';
-//const API = 'http://10.0.2.2:8080/auth/';
-var django_server='http://10.0.3.2/8080/auth';
-var rust_server ='http://127.0.0.1:8002';
-var apigateway ='http://127.0.0.1:8000';
-
-const POSTS = 'http://127.0.0.1:8003/posts/';
-
-const SERVER = POSTS;
+const SERVER = global.config.ENDPOINTS.posts;
 
 //const SERVER = 'http://127.0.0.1:8080/posts';
 //Android emulator local ip:
@@ -55,7 +47,7 @@ class App extends Component {
           //headers: new Headers({
           headers: {
             //'Authorization': 'Basic '+btoa('paulo:unicornio'),
-            'Authorization': 'Basic cGF1bG86dW5pY29ybmlv',
+            'Authorization': 'Basic '+global.config.AUTH.POSTS.token,
             //'X-CSRFToken': 'gTiPlygvqXHH3NEDOO23x9yhVUAv2MvOkMKH3wdPKjh3tYfjqeaqACLU74uOcGxu',
             //'Accept': 'application/json',
             'Content-Type': 'application/json',

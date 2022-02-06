@@ -12,7 +12,8 @@ import {
   DialogActions,
   DialogContentText,
   DialogContent,
-  DialogTitle
+  DialogTitle,
+  makeStyles,
 
 } from '@material-ui/core';
 
@@ -28,13 +29,21 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 
 const SERVER = 'http://localhost:5820/esco/query';
 
+const useStyles = makeStyles((theme) => ({
+  delItem: {
+    '&:hover': {
+      background:'#ffcccb'
+    }
+  }
+}));
+
 function queryOccupation(wordInput) {
   let word = wordInput.toLowerCase();
   var q = `
   select ?occupation where { 
   ?o a <http://data.europa.eu/esco/model#Occupation> .
   ?o <http://www.w3.org/2004/02/skos/core#prefLabel> ?occupation .
-  FILTER langMatches( lang(?occupation), "pt" ) .
+  FILTER langMatches( lang(?occupation), "en" ) .
   FILTER( contains( lcase(str(?occupation)), "${word}" ) ) .
   } LIMIT 200`;
 
@@ -44,6 +53,8 @@ function queryOccupation(wordInput) {
 }
 
 const Jobs = ({ className, formData, handleClose, ...rest }) => {
+
+  const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
@@ -73,7 +84,7 @@ function changeOptionBaseOnValue(val) {
           method: 'GET',
           //headers: new Headers({
           headers: {
-            'Authorization': 'Basic '+btoa('admin:admin'),
+            'Authorization': 'Basic '+btoa(global.config.AUTH.STARDOG.user+':'+global.config.AUTH.STARDOG.pass),
             //'Authorization': 'Basic YWRtaW46YWRtaW4=',
             //'Authorization': 'Basic cGF1bG86dW5pY29ybmlv',
             //'X-CSRFToken': 'gTiPlygvqXHH3NEDOO23x9yhVUAv2MvOkMKH3wdPKjh3tYfjqeaqACLU74uOcGxu',
@@ -182,7 +193,7 @@ function listRemove(job) {
 <Grid style={{ paddingRight: '20px', paddingLeft: '15px' }}>
       <List component="nav" aria-label="secondary mailbox folders">
       {jobs.map((job) => 
-        <ListItem button style={{ borderBottom:'1px dashed #F5F5F5', marginBottom:'5px' }} onClick={() => listRemove(job)}>
+        <ListItem button className={classes.delItem} style={{ borderBottom:'1px dashed #F5F5F5', marginBottom:'5px' }} onClick={() => listRemove(job)}>
           <ListItemText primary={job} />
          <ListItemIcon style={{ paddingLeft:'20px' }}>
             <DeleteForever />

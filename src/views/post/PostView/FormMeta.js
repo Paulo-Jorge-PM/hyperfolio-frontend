@@ -64,7 +64,7 @@ const generalUpdate = (event) => {
           multiline
           rows={2}
           rowsMax={10}
-          variant="filled"
+          variant="outlined"
           fullWidth={true}
 
           onChange={generalUpdate}
@@ -109,7 +109,7 @@ const generalUpdate = (event) => {
           <Grid item xs={4}>
             <TextField
               fullWidth
-              label="For?"
+              label="For whom?"
               name="for"
               margin="normal"
               name="for"

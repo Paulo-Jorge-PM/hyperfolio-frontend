@@ -21,6 +21,7 @@ import {
 } from '@material-ui/core';
 
 import AddAssets from './AddAssets';
+import AddThumbnail from './AddThumbnail';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -153,7 +154,7 @@ const FormAssets = ({ className, formData, ...rest }) => {
                   color="inherit"
                   className={classes.imageTitle}
                 >
-                  ADD ASSETS{formData.assets.length!=0 ? " (xx)":""}
+                  ADD ASSETS{formData.assets.length!=0 ? " (" + formData.assets.length.toString() + ")":""}
                   <span className={classes.imageMarked} />
                 </Typography>
               </span>
@@ -161,6 +162,8 @@ const FormAssets = ({ className, formData, ...rest }) => {
           </Grid>
           <Grid item xs={6}>
             <ButtonBase
+              onClick={handleClickOpenIllustration}
+              
               focusRipple
               key="{image.title}"
               className={classes.image}
@@ -183,7 +186,7 @@ const FormAssets = ({ className, formData, ...rest }) => {
                   color="inherit"
                   className={classes.imageTitle}
                 >
-                  ADD ILLUSTRATION
+                  ADD ILLUSTRATION{formData.thumbnail.length!=0 ? " (" + formData.thumbnail.length.toString() + ")":""}
                   <span className={classes.imageMarked} />
                 </Typography>
               </span>
@@ -202,6 +205,22 @@ const FormAssets = ({ className, formData, ...rest }) => {
             >
 
           <AddAssets
+            handleClose={handleClose}
+            formData={formData}
+          />
+
+      </Dialog>
+
+
+      <Dialog 
+            open={openIllustration} 
+            fullWidth={true}
+            maxWidth="md"
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+            >
+
+          <AddThumbnail
             handleClose={handleClose}
             formData={formData}
           />

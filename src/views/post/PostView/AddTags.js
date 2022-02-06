@@ -12,8 +12,7 @@ import {
   DialogActions,
   DialogContentText,
   DialogContent,
-  DialogTitle,
-  makeStyles,
+  DialogTitle
 
 } from '@material-ui/core';
 
@@ -25,23 +24,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import DeleteForever from '@material-ui/icons/DeleteForever';
 
+
+
 const SERVER = 'http://localhost:5820/esco/query';
 
-const useStyles = makeStyles((theme) => ({
-  delItem: {
-    '&:hover': {
-      background:'#ffcccb'
-    }
-  }
-}));
-
-function querySkill(wordInput) {
+function query(wordInput) {
   let word = wordInput.toLowerCase();
   var q = `
   select ?skill where { 
   ?o a <http://data.europa.eu/esco/model#Skill> .
   ?o <http://www.w3.org/2004/02/skos/core#prefLabel> ?skill .
-  FILTER langMatches( lang(?skill), "en" ) .
+  FILTER langMatches( lang(?skill), "pt" ) .
   FILTER( contains( lcase(str(?skill)), "${word}" ) ) .
   } LIMIT 200`;
   //FILTER( strStarts( ?occupation, "${wordInput}" ) ) .
@@ -50,8 +43,6 @@ function querySkill(wordInput) {
 }
 
 const Skills = ({ className, formData, handleClose, ...rest }) => {
-
-  const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
@@ -69,12 +60,12 @@ function buildOptions(d) {
 }
 
 function changeOptionBaseOnValue(val) {
-      let query = querySkill(val);
+      let query = query(val);
       fetch(SERVER+'?query='+encodeURIComponent(query), {
           method: 'GET',
           //headers: new Headers({
           headers: {
-            'Authorization': 'Basic '+btoa(global.config.AUTH.STARDOG.user+':'+global.config.AUTH.STARDOG.pass),
+            'Authorization': 'Basic '+btoa('admin:admin'),
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/sparql-results+json',
           },
@@ -120,8 +111,8 @@ function listRemove(job) {
         setOpen(false);
         setOptions([]);
       }}
-      getOptionSelected={(option, value) => option.skill.value === value.skill.value}
-      getOptionLabel={(option) => option.skill.value.toString()}
+      getOptionSelected={(option, value) => option.occupation.value === value.occupation.value}
+      getOptionLabel={(option) => option.occupation.value.toString()}
       options={options}
       loading={loading}
 
@@ -164,9 +155,9 @@ function listRemove(job) {
 
 <Grid style={{ paddingRight: '20px', paddingLeft: '15px' }}>
       <List component="nav" aria-label="secondary mailbox folders">
-      {skills.map((skill) => 
-        <ListItem button className={classes.delItem} style={{ borderBottom:'1px dashed #F5F5F5', marginBottom:'5px' }} onClick={() => listRemove(skill)}>
-          <ListItemText primary={skill} />
+      {skills.map((job) => 
+        <ListItem button style={{ borderBottom:'1px dashed #F5F5F5', marginBottom:'5px' }} onClick={() => listRemove(job)}>
+          <ListItemText primary={job} />
          <ListItemIcon style={{ paddingLeft:'20px' }}>
             <DeleteForever />
           </ListItemIcon>

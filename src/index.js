@@ -1,4 +1,5 @@
 import React from 'react';
+import './config'; // Import the Global vars
 import ReactDOM from 'react-dom';
 //import { BrowserRouter } from 'react-router-dom';
 import { HashRouter } from 'react-router-dom';

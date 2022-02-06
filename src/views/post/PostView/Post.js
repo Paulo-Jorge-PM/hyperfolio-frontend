@@ -2,9 +2,8 @@ import React, { useEffect, useState, createContext } from 'react';
 
 //Lighter than Redux for form handling 
 //import { Formik, Field, Form } from "formik";
-
+import { Navigate } from "react-router-dom";
 import { useCallback } from 'react';
-
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -45,21 +44,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column'
   },
-  statsItem: {
-    alignItems: 'center',
-    display: 'flex'
-  },
-  statsIcon: {
-    marginRight: theme.spacing(1)
-  },
-  userName: {
-    fontWeight: 'bold',
-    color:'#000000'
-  },
-  userPhoto: {
-    borderRadius:'50%',
-    marginRight:'10px',
-  }
 }));
 
 const DB = 'http://localhost:5820/esco/query';
@@ -85,20 +69,10 @@ const SERVER = DB + "?query=" + encodeURIComponent(query);
 //accept / application/sparql-results+json
 
 
-var timeInterval = 2000;
-const examplesMaxSize = 7;
-
-const textExamples = {
-  didExamples: ["Painted 🖌", "Composed 🎤", "Published 🎓", "Filmed 🎥", "Built 🏡", "Wrote 📖", "Invented 🔧", "Cooked 🍪"],
-  livedExamples: ["Graduated 🎓", "Won 🏆", "Experienced 👶", "Certfied 📚", "Scheduled 🏖", "Married 💍", "Moved 🔑", "Visited 🗿"],
-  saidExamples: ["Thought 💭", "Teached 💡", "Announcing 📢", "Theorized 🔎", "Believe 💫", "Sketched 🗒", "Debating 🗣", "Advise 💬"]
-}
-
-
 //FORM MAIN DATA
 let formData = {
 
-    user: 3,
+    user: 1,
     //user_token: '',
     //submition_datetime: '',
 
@@ -107,11 +81,11 @@ let formData = {
 
     //description: '',
     body: "",
-    thumbnail: "",
-    typePost: "Artifact",
+    thumbnail: [],//{id:"1", user:"1", fName:"xxx.jpg", fLink:"", fType:"Image", originalName:"xx"} / to view use thumbnail[0] to filter abuses
+    typePost: "Artifact",//Artifact / Activity / Text
     typeId: 2,
     rate: "",
-    dateCreated: "",
+    //dateCreated: "",
     //views: 0,
     privacy: "Public",
 
@@ -119,75 +93,55 @@ let formData = {
     where: "",
     for: "",
 
-    assets: [],
+    assets: [],//Format: {id:"1", user:"1", fName:"xxx.jpg", fLink:"", fType:"Image", originalName:"xx"}
     comments: [],
 
     jobs: [],
     skills: [],
     persons: [],
-    tags: [],
-
-  //key2: {...},
-  //key3: [{...}, {...}],
+    categories: [],
 }
+
 
 
 const Post = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [redirect, setRedirect] = useState(null);
 
-  //Hooks (States for Functions)
-  const [formVar, setForm] = useState("Artifact");
-  const [examplesN, setExamplesN] = useState(0);
-  const [examplesText, setExamplesText] = useState(textExamples.didExamples);
-
-  //const [user, setUser] = useState({ name: "John Doe", age: 20 });
-
-  const [count, setCount] = useState(0);
-
-  //const formType = (arg) => setForm(arg);
-  const formType = (arg) => {
-      setForm(arg);
-      formData.type = arg;//updte formData
-      setExamplesN(0);
-      if (arg == "Activity") {
-        setExamplesText(textExamples.livedExamples);
-      }
-      else if (arg == "Text") {
-        setExamplesText(textExamples.saidExamples);
-      }
-      else {
-        setExamplesText(textExamples.didExamples);
-      }
+  /*function urlParams() {
+    const windowUrl = window.location.search;
+    const params = new URLSearchParams(windowUrl);
+    const hasTypePost = params.has("typePost");
+    const t = params.get("typePost");
+    alert(params);
   }
 
-  function timerCalc() {
-      if (examplesN === examplesMaxSize) {
-        setExamplesN(0);
-      } else {
-        setExamplesN(examplesN + 1);
-      }
-  } 
+  const type = urlParams();*/
 
-  function useInterval(callback, delay) {
-    const intervalId = React.useRef(null);
-    const savedCallback = React.useRef(callback);
-    React.useEffect(() => {
-      savedCallback.current = callback;
-    });
-    React.useEffect(() => {
-      const tick = () => savedCallback.current();
-      if (typeof delay === 'number') {
-        intervalId.current = window.setInterval(tick, delay);
-        return () => window.clearInterval(intervalId.current);
-      }
-    }, [delay]);
-    return intervalId.current;
+
+  // When form submit and redirect to wall, when geting back the data is still the same in the old form
+  // So reset when triggering the redirect
+  function resetFormData() {
+    formData = {
+      user: 1,
+      title: "",
+      body: "",
+      thumbnail: [],
+      typePost: "Artifact",
+      typeId: 2,
+      rate: "",
+      privacy: "Public",
+      when: "",
+      where: "",
+      for: "",
+      assets: [],
+      comments: [],
+      jobs: [],
+      skills: [],
+      persons: [],
+      tags: [],
+    }
   }
-
-  useInterval(() => {
-    timerCalc();
-  }, timeInterval);
-
 
   // Callback function to communicate bettween parent and child component
   const updateForm = useCallback((field, value) => {
@@ -205,22 +159,19 @@ function toFormData(o) {
   return Object.entries(o).reduce((d,e) => (d.append(...e),d), new FormData())
 }
 
-
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
 
-    const today = new Date();
-    let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    formData.dateCreated = date;
-    alert(formData);
+    //const today = new Date();
+    //let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    //formData.dateCreated = date;
 
 
     //let data = toFormData(formData); // creates a new FormData
 
     //alert(JSON.stringify(formData));
-    alert( JSON.parse(JSON.stringify(formData)) );
+    //alert( JSON.parse(JSON.stringify(formData)) );
 
     //data.append("image", this.state.image); // add data to form data
 
@@ -229,12 +180,13 @@ function toFormData(o) {
     const requestOptions = {
         method: 'POST',
         headers: { 
-          //'Authorization': 'Basic '+btoa('paulo:unicornio'),
+          //'Authorization': 'Basic '+btoa('paulo:admin'),
           //'X-CSRFToken': 'gTiPlygvqXHH3NEDOO23x9yhVUAv2MvOkMKH3wdPKjh3tYfjqeaqACLU74uOcGxu',
           //'Accept': 'application/json',
           //'Content-Type': 'multipart/form-data',
           //credentials: 'same-origin',
-          'Authorization': 'Basic cGF1bG86dW5pY29ybmlv',
+          //'Authorization': 'Basic cGF1bG86dW5pY29ybmlv',
+          'Authorization': 'Basic '+global.config.AUTH.POSTS.token,
           'Content-Type': 'application/json',
           //'accept': 'application/json',
           //'X-CSRFToken': 'arzDs3SqGp1gkqe9dtFxu8PSSSQVhf6zo2U70ahoVrectrFbFpFbwiI41u9o6yPo'
@@ -247,7 +199,10 @@ function toFormData(o) {
     .then(function(response) {
       //if(response.status == 201) {
       if (response.ok) {
-        alert("Enviado");
+        //alert("Enviado");
+        //const navigate = useNavigate();
+        //navigate.push("/wall");
+        setRedirect("/wall");
       }
       else {
         //alert(JSON.stringify(formData));
@@ -282,7 +237,10 @@ function toFormData(o) {
 
 
 
-
+  if (redirect) {
+    {resetFormData()}
+    return <Navigate to={redirect} />
+  }
 
 
   return (
@@ -296,113 +254,11 @@ function toFormData(o) {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardContent>
-        <Box
-          display="flex"
-          justifyContent="left"
-          alignItems="center"
-          mb={3}
-          style={{position: 'relative'}}
-        >
-          <Avatar
-            className={classes.userPhoto}
-            alt="User Photo"
-            src=""
-            variant="square"
-          />
 
-            <Toolbar
-              updateForm={updateForm}
-            />
-
-        </Box>
-
-<Divider />
-
-        <Grid style={{paddingTop: "10px"}}
-          direction="row"
-          justify="center"
-          alignItems="center"
-          spacing={8}
-          container
-        >
-
-          <Grid item style={{paddingBottom: "20px"}}>
-          <Fab
-            variant="extended"
-            size="small"
-            aria-label="add"
-            color={formVar=="Artifact" ? "primary":"default"}
-            style={{paddingLeft:'15px',paddingRight:'15px'}}
-            onClick={() => formType('Artifact')}
-          >
-
-            Did this!&nbsp;<SvgIcon
-                fontSize="small"
-                //color="action"
-              >
-                <Artifact />
-              </SvgIcon>
-          </Fab>
-          </Grid>
-
-          <Grid item style={{paddingBottom: "20px"}}>
-          <Fab
-            variant="extended"
-            size="small"
-            color={formVar=="Activity" ? "primary":"default"}
-            aria-label="add"
-            style={{paddingLeft:'15px',paddingRight:'15px'}}
-            onClick={() => formType('Activity')}
-          >
-            Lived this!&nbsp;<SvgIcon
-                fontSize="small"
-                //color="action"
-              >
-                <Activity />
-              </SvgIcon>
-          </Fab>
-          </Grid>
-
-          <Grid item style={{paddingBottom: "20px"}}>
-          <Fab
-            variant="extended"
-            size="small"
-            color={formVar=="Text" ? "primary":"default"}
-            aria-label="add"
-            style={{paddingLeft:'15px',paddingRight:'15px'}}
-            onClick={() => formType('Text')}
-          >
-            Said this!&nbsp;<SvgIcon
-                fontSize="small"
-                //color="action"
-              >
-                <Text />
-              </SvgIcon>
-          </Fab>
-          </Grid>
-        </Grid>
-      </CardContent>
-
-
-      <Grid style={{marginTop: "20px", background:"#f4f6f8"}}
-        direction="row"
-        justify="center"
-        alignItems="center"
-        spacing={1}
-        container
-      >
-        <Grid item xs={6}>
-            <Typography variant="overline" component="p" align="right">
-              Things that I <strong>{formVar}</strong>:
-            </Typography>
-        </Grid>
-        <Grid item xs={6}>
-        <Typography variant="overline" component="p" align="left">
-        <strong>{examplesText[examplesN]}</strong> this!
-        </Typography>
-        </Grid>
-      </Grid>
+      <Toolbar
+        formData={formData}
+        updateForm={updateForm}
+      />
      
       <FormMeta 
         updateForm={updateForm}

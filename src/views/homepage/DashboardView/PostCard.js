@@ -23,7 +23,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 
 //ICONS
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import ChatBubbleOutline from '@material-ui/icons/ChatBubbleOutline';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
@@ -246,9 +246,9 @@ const PostCard = ({ className, post, ...rest }) => {
   let jobs;
   {if(post.jobs.length!=0) {
     jobs = <Typography color="textSecondary" className={classes.sideMetadata}>
-      <p><strong>Job:</strong></p>
+      <p><strong>Jobs:</strong></p>
       {post.jobs.map((item) =>
-        <p>{item}</p>
+        <p style={{marginBottom:"5px"}}>{item}</p>
         )}
     </Typography>
     }
@@ -259,7 +259,7 @@ const PostCard = ({ className, post, ...rest }) => {
     skills = <Typography color="textSecondary" className={classes.sideMetadata}>
       <p><strong>Skills:</strong></p>
       {post.skills.map((item) =>
-        <p>{item}</p>
+        <p style={{marginBottom:"5px"}}>{item}</p>
         )}
     </Typography>
     }
@@ -299,7 +299,7 @@ const PostCard = ({ className, post, ...rest }) => {
             id="sideMetadata"
             style={{marginTop:"45px", paddingRight:"5px", width:"100%"}}
            >
-              <Typography color="textSecondary">
+              <Typography color="textSecondary" style={{ fontSize:"14px" }}>
               <strong><TypeThis type={post.typePost} /></strong>
               </Typography>
 
@@ -429,11 +429,11 @@ const PostCard = ({ className, post, ...rest }) => {
         </Typography>
 </CardContent>
 
-    { post.thumbnail != "" &&
+    { post.thumbnail.length > 0 &&
      <CardMedia
         className={classes.media}
         component="img"
-        src={`/static/images/artifacts/${post.thumbnail}`}
+        src={`${global.config.ENDPOINTS.assets}user_${post.thumbnail[0].user}/${post.thumbnail[0].fName}`}
         title="Artifact"
       />
     }
@@ -508,7 +508,7 @@ const PostCard = ({ className, post, ...rest }) => {
             alignItems="center"
             pl={2}
             >
-              <AccessTimeIcon
+              <ChatBubbleOutline
                 className={classes.statsIcon}
                 color="action"
               />
@@ -517,7 +517,7 @@ const PostCard = ({ className, post, ...rest }) => {
                 display="inline"
                 variant="body2"
               >
-                Updated: 2h
+                Comments: {post.comments.length}
               </Typography>
             </Box>
 
@@ -535,7 +535,7 @@ const PostCard = ({ className, post, ...rest }) => {
                 display="inline"
                 variant="body2"
               >
-                Assets: 3 {' '}
+                Assets: {post.assets.length}
               </Typography>
             </Box>
           </Grid>
