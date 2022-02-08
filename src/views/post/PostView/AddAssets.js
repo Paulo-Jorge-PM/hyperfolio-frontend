@@ -293,7 +293,7 @@ function onFileUpload() {
 
         <DialogContent>
           <DialogContentText>
-            Add assets that testify your creation. Share your work with the world.
+            Attach assets that testify your creation. Share your work with the world.
           </DialogContentText>
 
 
