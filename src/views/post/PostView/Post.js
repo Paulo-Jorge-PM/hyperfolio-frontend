@@ -139,7 +139,7 @@ const Post = ({ className, ...rest }) => {
       jobs: [],
       skills: [],
       persons: [],
-      tags: [],
+      categories: [],
     }
   }
 
@@ -161,8 +161,6 @@ function toFormData(o) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-
     //const today = new Date();
     //let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     //formData.dateCreated = date;
@@ -196,7 +194,32 @@ function toFormData(o) {
     };
 
     fetch(SERVER, requestOptions)
-    .then(function(response) {
+    .then(response => response.json())
+    .then(data => {
+      data["sourceUrl"] = "http://localhost:3000/#/posts/"+data.id
+      data["text"] = data.title + " " + data.body + " " + JSON.stringify(data.jobs) + " " + JSON.stringify(data.skills) + " " + data.for + " " + data.where
+      data["userName"] = "Paulo"
+      data["year"] = data.dateCreated.split("-")[0]
+      //alert(JSON.stringify(data));
+
+      //SEND FOR Entigraph->RABITMQ->Python ontology generation
+        fetch("http://localhost:3888/amqp", {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+        /*.then(function(response) {
+          if(response.status == 201) {
+            console.log("Sent for AMQP Entigraph")
+          }
+        }
+        .catch(error => alert("Error - Refresh page and try again"))*/
+
+      setRedirect("/wall")
+    })
+    /*.then(function(response) {
       //if(response.status == 201) {
       if (response.ok) {
         //alert("Enviado");
@@ -209,7 +232,7 @@ function toFormData(o) {
         //alert( response.statusText)
         alert("Failed - Try again");
       }
-    })
+    })*/
     .catch(error => alert("Error - Refresh page and try again"));
 
 

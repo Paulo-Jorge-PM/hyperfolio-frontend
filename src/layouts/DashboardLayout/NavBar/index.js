@@ -73,9 +73,9 @@ const items = [
     title: 'Communities'
   },
   {
-    href: 'notifications',
+    href: 'sparql',
     icon: Bell,
-    title: 'Messages'
+    title: 'Premium'
   },
   {
     href: 'settings',

@@ -13,6 +13,7 @@ import SettingsView from 'src/views/settings/SettingsView';
 import PostView from 'src/views/post/PostView';
 import CvView from 'src/views/cv/CvView';
 import SearchView from 'src/views/search/SearchView';
+import SparqlView from 'src/views/sparql/SparqlView';
 
 const routes = [
   {
@@ -27,6 +28,7 @@ const routes = [
       { path: 'communities', element: <CommunitiesView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: 'post', element: <PostView /> },
+      { path: 'sparql', element: <SparqlView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },

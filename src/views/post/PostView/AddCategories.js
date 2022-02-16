@@ -90,45 +90,76 @@ function changeOptionBaseOnValue(val) {
       //buildOptions(Artifact);
 }
 
-function addEntry() {
-setCategoriess(categories => categories.concat(selectedCategories));
-formData.categories = formData.categories.concat(selectedCategories);
+/*function addEntry() {
+  setCategoriess(categories => categories.concat(selectedCategories.title));
+  formData.categories = formData.categories.concat(selectedCategories.title);
 }
 
 function listRemove(job) {
   setCategoriess(categories.filter(item => item !== job));
   formData.categories = formData.categories.filter(item => item !== job);
-}
+}*/
 
 
-const Artifact = [
-{title: "Art"},
-{title: "Science"},
-{title: "Engineering"},
-{title: "Humanities"},
-{title: "Architecture"},
-{title: "DIY"},
-{title: "Miscellaneous"}
+/*const Artifact = [
+{name: "Art"},
+{name: "Science"},
+{name: "Engineering"},
+{name: "Humanities"},
+{name: "Architecture"},
+{name: "DIY"},
+{name: "Miscellaneous"}
 ]
 
 const Activity = [
-{title: "Graduation"},
-{title: "Certification"},
-{title: "Travel"},
-{title: "Life"},
-{title: "Event"},
-{title: "Science"},
-{title: "Prize"},
-{title: "Miscellaneous"}
+{name: "Graduation"},
+{name: "Certification"},
+{name: "Travel"},
+{name: "Life"},
+{name: "Event"},
+{name: "Science"},
+{name: "Prize"},
+{name: "Miscellaneous"}
 ]
 
 const Text = [
-{title: "Opinion"},
-{title: "Essay"},
-{title: "Joke"},
-{title: "Theory"},
-{title: "Plan"},
-{title: "Miscellaneous"}
+{name: "Opinion"},
+{name: "Essay"},
+{name: "Joke"},
+{name: "Theory"},
+{name: "Plan"},
+{name: "Miscellaneous"}
+]
+*/
+
+const Artifact = [
+"Art",
+"Science",
+"Code",
+"Engineering",
+"Humanities",
+"Architecture",
+"DIY",
+"Miscellaneous"
+]
+
+const Activity = [
+"Graduation",
+"Certification",
+"Travel",
+"Life",
+"Event",
+"Science",
+"Prize",
+"Miscellaneous"
+]
+
+const Text = [
+"Blog",
+"Opinion",
+"Essay",
+"Joke",
+"Miscellaneous"
 ]
 
 var catType;
@@ -163,15 +194,11 @@ switch (formData.typePost) {
       value={value}
       onChange={(event, newValue) => {
         if (typeof newValue === 'string') {
-          setValue({
-            title: newValue,
-          });
+          setValue(newValue);
           formData.categories = [newValue];
         } else if (newValue && newValue.inputValue) {
           // Create a new value from the user input
-          setValue({
-            title: newValue.inputValue,
-          });
+          setValue(newValue.inputValue);
           formData.categories = [newValue.inputValue];
         } else {
           setValue(newValue);
@@ -183,10 +210,7 @@ switch (formData.typePost) {
 
         // Suggest the creation of a new value
         if (params.inputValue !== '') {
-          filtered.push({
-            inputValue: params.inputValue,
-            title: `Add "${params.inputValue}"`,
-          });
+          filtered.push(params.inputValue);
         }
 
         return filtered;
@@ -206,9 +230,9 @@ switch (formData.typePost) {
           return option.inputValue;
         }
         // Regular option
-        return option.title;
+        return option;
       }}
-      renderOption={(option) => option.title}
+      renderOption={(option) => option}
       style={{ width: "100%" }}
       freeSolo
       renderInput={(params) => (

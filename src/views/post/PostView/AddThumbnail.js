@@ -154,7 +154,7 @@ function selectThumbnail(id, type) {
 
         <DialogContent>
           <DialogContentText>
-            Select an illustration from the uploaded assets. Illustrations highlight your creations.
+            Select an illustration from the uploaded assets. Illustrations highlight your creations. Or create one <a href="http://0.0.0.0:8866/" target="_blank">here</a>.
           </DialogContentText>
 
 
