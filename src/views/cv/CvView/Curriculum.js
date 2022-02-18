@@ -70,6 +70,7 @@ const Categories = {
   "Humanities": <MenuBook />,
   "Architecture": <Architecture />,
   "DIY": <HomeWork />,
+  "Code": <LaptopChromebook />,
   "Miscellaneous": <HourglassFull />,
 
   "Graduation": <School />,

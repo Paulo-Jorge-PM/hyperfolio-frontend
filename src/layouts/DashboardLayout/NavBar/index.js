@@ -171,40 +171,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           ))}
         </List>
       </Box>
-      <Box flexGrow={1} />
-      <Box
-        p={2}
-        m={2}
-        bgcolor="background.dark"
-      >
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h4"
-        >
-          Out of sync?
-        </Typography>
-        <Typography
-          align="center"
-          variant="body2"
-        >
-          Restart services
-        </Typography>
-        <Box
-          display="flex"
-          justifyContent="center"
-          mt={2}
-        >
-          <Button
-            color="primary"
-            component="a"
-            href="#"
-            variant="contained"
-          >
-            Reload
-          </Button>
-        </Box>
-      </Box>
+
     </Box>
   );
 

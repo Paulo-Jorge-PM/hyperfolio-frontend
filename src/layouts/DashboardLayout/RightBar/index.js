@@ -33,7 +33,7 @@ const user = {
 };
 
 const items = [
-  {
+  /*{
     href: '/app/dashboard',
     icon: Home,
     title: 'Wall'
@@ -57,7 +57,7 @@ const items = [
     href: '/app/settings',
     icon: SettingsIcon,
     title: 'Settings'
-  },
+  },*/
   /*{
     href: '/app/account',
     icon: UserIcon,
@@ -114,12 +114,7 @@ const RightBar = ({ onMobileClose, openMobile }) => {
         flexDirection="column"
         p={2}
       >
-        <Avatar
-          className={classes.avatar}
-          component={RouterLink}
-          src={user.avatar}
-          to="/app/account"
-        />
+
         <Typography
           className={classes.name}
           color="textPrimary"

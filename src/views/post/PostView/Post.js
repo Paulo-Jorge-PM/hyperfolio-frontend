@@ -196,10 +196,51 @@ function toFormData(o) {
     fetch(SERVER, requestOptions)
     .then(response => response.json())
     .then(data => {
-      data["sourceUrl"] = "http://localhost:3000/#/posts/"+data.id
-      data["text"] = data.title + " " + data.body + " " + JSON.stringify(data.jobs) + " " + JSON.stringify(data.skills) + " " + data.for + " " + data.where
-      data["userName"] = "Paulo"
-      data["year"] = data.dateCreated.split("-")[0]
+
+      var graph_json = {};
+
+      graph_json["id"] = data["id"]
+      graph_json["sourceUrl"] = "http://localhost:3000/#/posts/"+data.id;
+      graph_json["typePost"] = data["typePost"];
+      graph_json["user"] = data["user"];
+      graph_json["userName"] = "Paulo Martins";
+      graph_json["dateCreated"] = data["dateCreated"];
+      graph_json["title"] = data["title"];
+      graph_json["body"] = data["body"];
+
+      let s = JSON.stringify(data.skills)
+      let j = JSON.stringify(data.jobs)
+      let f = data.for
+      let w = data.where
+
+      //graph_json["text"] = data.title + " " + data.body + " " + JSON.stringify(data.jobs) + " " + JSON.stringify(data.skills) + " " + data.for + " " + data.where;
+      graph_json["text"] = data.title + " " + data.body
+
+      if (s != "[]") {
+        graph_json["text"] = graph_json["text"] + " " + s
+      }
+      if (j != "[]") {
+        graph_json["text"] = graph_json["text"] + " " + j
+      }
+      if (f != null) {
+        graph_json["text"] = graph_json["text"] + " " + f
+      }
+      if (w != null) {
+        graph_json["text"] = graph_json["text"] + " " + w
+      }
+
+      graph_json["year"] = data.dateCreated.split("-")[0];
+
+      var graph_array=[graph_json];
+
+      //data["sourceUrl"] = "http://localhost:3000/#/posts/"+data.id
+      //data["text"] = data.title + " " + data.body + " " + JSON.stringify(data.jobs) + " " + JSON.stringify(data.skills) + " " + data.for + " " + data.where
+      //data["userName"] = "Paulo"
+      //data["year"] = data.dateCreated.split("-")[0]
+      
+
+
+
       //alert(JSON.stringify(data));
 
       //SEND FOR Entigraph->RABITMQ->Python ontology generation
@@ -208,7 +249,7 @@ function toFormData(o) {
           headers: { 
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(graph_array)
         })
         /*.then(function(response) {
           if(response.status == 201) {
